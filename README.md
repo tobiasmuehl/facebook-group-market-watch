@@ -37,10 +37,38 @@ isn't. What carried over is the part that took months to get right:
 - **Repost detection that holds up.** Agents repost the same unit daily under a
   new URL; matching is on normalized text and on photo-set overlap that survives
   Facebook re-signing its CDN URLs.
-- **Model selection settled by measurement.** DeepSeek was benchmarked against
-  GPT-5.2 and gpt-oss-120b on a hand-labelled English/Thai golden set. The same
-  harness ships here as `watcher label` / `watcher bench`, so you can re-run it
-  on your own data instead of taking anyone's word for it.
+- **Model selection settled by measurement**, not preference — see below.
+
+### The benchmark that picked DeepSeek
+
+30 hand-labelled English/Thai listings, scored field by field against corrected
+ground truth:
+
+| Model | Field F1 | Cost / post | Failed parses | p95 latency |
+|---|---:|---:|---:|---:|
+| **deepseek-v3.2** (OpenRouter) | **0.859** | **$0.0014** | 0 / 30 | 88.0s |
+| gpt-5.2 (OpenAI) | 0.826 | $0.0095 | 0 / 30 | 10.8s |
+
+Three things came out of it:
+
+1. **The cheap model was more accurate here**, not merely acceptable. Field
+   extraction from messy bilingual posts rewards instruction-following, not
+   reasoning — and it costs **~7x less**.
+2. **DeepSeek is much slower** — 88s vs 11s at p95. Irrelevant for a background
+   watcher that polls every 15 minutes, disqualifying if you need interactive
+   latency. Know which one you are.
+3. **Both parsed all 30 without failing**, and their *downstream* scores were
+   effectively tied (0.970 vs 0.971) — the field-level differences rarely
+   changed the final match decision. Small extraction wins matter less than
+   you'd think.
+
+> **Dated February 2026 — treat as a method, not a verdict.** It tested
+> `deepseek-v3.2` against `gpt-5.2`; this template now ships `deepseek-v4-flash`
+> and both families have moved on. Prices change monthly. The reason the harness
+> is included as `watcher label` / `watcher bench` is so you can re-run it on
+> *your* data instead of trusting a number from a different quarter — 30
+> hand-corrected posts is enough to separate a model that works from one that
+> doesn't.
 - **[`TROUBLESHOOTING.md`](TROUBLESHOOTING.md) is a list of things that actually
   broke** — duplicate alerts from two workers, a day of posts lost to an API
   quota wall, an LLM inferring ownership from the group name. Not hypotheticals.

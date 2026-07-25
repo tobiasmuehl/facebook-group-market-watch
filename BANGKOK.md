@@ -23,7 +23,11 @@ would otherwise discover one at a time — Thai and English mixed inside one
 sentence, prices written as `35k` / `35,000` / `3 หมื่น` / `2.5 ล้าน`, soi
 numbers on roads that aren't Sukhumvit, agents claiming to be owners, and spam
 written in mathematical-alphanumeric Unicode specifically to defeat keyword
-filters. The model choice was settled by benchmark, not preference.
+filters. The model choice was settled by benchmark, not preference: on 30
+hand-labelled EN/TH listings DeepSeek beat GPT-5.2 on field accuracy (0.859 vs
+0.826 F1) at roughly a seventh of the cost. That run is from February 2026 and
+tested the previous model generation — re-run `watcher label` / `watcher bench`
+if you want a current answer rather than a historical one.
 
 **So don't rewrite the prompt.** Adjust the constants at the top of the file —
 budget, sois, areas, `LOOKING_FOR`, `ALERT_THRESHOLD` — and calibrate at Step 5.
