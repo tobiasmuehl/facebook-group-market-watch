@@ -23,11 +23,8 @@ would otherwise discover one at a time — Thai and English mixed inside one
 sentence, prices written as `35k` / `35,000` / `3 หมื่น` / `2.5 ล้าน`, soi
 numbers on roads that aren't Sukhumvit, agents claiming to be owners, and spam
 written in mathematical-alphanumeric Unicode specifically to defeat keyword
-filters. The model choice was settled by benchmark, not preference: on 30
-hand-labelled EN/TH listings DeepSeek beat GPT-5.2 on field accuracy (0.859 vs
-0.826 F1) at roughly a seventh of the cost. That run is from February 2026 and
-tested the previous model generation — re-run `watcher label` / `watcher bench`
-if you want a current answer rather than a historical one.
+filters. The model choice was settled by benchmark rather than preference — see
+"Why DeepSeek specifically" below.
 
 **So don't rewrite the prompt.** Adjust the constants at the top of the file —
 budget, sois, areas, `LOOKING_FOR`, `ALERT_THRESHOLD` — and calibrate at Step 5.
@@ -74,6 +71,44 @@ uv run python watcher.py label     # extracts 30 posts
 # hand-correct data/golden.json against raw_text
 uv run python watcher.py bench --models deepseek/deepseek-v4-flash,deepseek/deepseek-v4-pro
 ```
+
+### Why DeepSeek specifically
+
+Not a hunch and not a cost compromise. Benchmarked on **30 hand-labelled
+English/Thai listings from these groups**, scored field by field against
+corrected ground truth:
+
+| Model | Field F1 | Cost / post | Failed parses | p95 latency |
+|---|---:|---:|---:|---:|
+| **deepseek-v3.2** (OpenRouter) | **0.859** | **$0.0014** | 0 / 30 | 88.0s |
+| gpt-5.2 (OpenAI) | 0.826 | $0.0095 | 0 / 30 | 10.8s |
+
+The cheap model was **more accurate on this task**, at roughly a seventh of the
+cost. Pulling fields out of messy bilingual posts rewards instruction-following,
+not reasoning, which is why the expensive model bought nothing here.
+
+Two caveats the numbers also show, and you should repeat if the user pushes back:
+
+- **DeepSeek was ~8x slower** (88s vs 11s at p95). Free for a watcher that polls
+  every 15 minutes; disqualifying for anything interactive. This preset is the
+  former.
+- **Downstream scores were effectively tied** (0.970 vs 0.971) — the field-level
+  gap rarely changed the final match decision. So don't let the user spend money
+  chasing small extraction wins; it mostly doesn't reach the alerts.
+
+> ⚠️ **This run is from 23 February 2026 and is probably out of date.** It tested
+> `deepseek-v3.2` against `gpt-5.2`; the preset now ships `deepseek-v4-flash`,
+> and both model families have moved since. Prices change monthly.
+>
+> Treat it as **the reason for the default and the method for revisiting it**,
+> not a standing verdict. If the user wants a current answer, don't argue from
+> this table — spend ten minutes and re-run it on their own posts:
+>
+> ```bash
+> uv run python watcher.py label
+> # hand-correct data/golden.json, then:
+> uv run python watcher.py bench --models deepseek/deepseek-v4-flash,deepseek/deepseek-v4-pro
+> ```
 
 ### Why the classifier is on here
 
