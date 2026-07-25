@@ -11,6 +11,27 @@ cp examples/bangkok_apartments.py watch.py
 
 ---
 
+## Why you can trust this preset
+
+This is not a guess at what Bangkok posts look like. The prompt, the classifier
+criteria, the scoring weights and the dedup thresholds all come from a system
+that ran continuously for months on these exact 23 groups and processed **over
+100,000 listings**.
+
+That means, concretely: the extraction prompt has already met the edge cases you
+would otherwise discover one at a time — Thai and English mixed inside one
+sentence, prices written as `35k` / `35,000` / `3 หมื่น` / `2.5 ล้าน`, soi
+numbers on roads that aren't Sukhumvit, agents claiming to be owners, and spam
+written in mathematical-alphanumeric Unicode specifically to defeat keyword
+filters. The model choice was settled by benchmark, not preference.
+
+**So don't rewrite the prompt.** Adjust the constants at the top of the file —
+budget, sois, areas, `LOOKING_FOR`, `ALERT_THRESHOLD` — and calibrate at Step 5.
+If extraction genuinely looks wrong on their posts, measure it with
+`watcher label` / `watcher bench` before changing anything.
+
+---
+
 ## What's already decided (do not re-ask)
 
 | Step in AGENTS.md | Normally | Here |

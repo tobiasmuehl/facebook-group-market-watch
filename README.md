@@ -17,6 +17,40 @@ commands.
 
 ---
 
+## Where this came from
+
+Not a weekend project. This is the extraction pipeline from a Bangkok
+apartment-hunting system that ran continuously for months and processed
+**over 100,000 listings** from the same 23 Facebook groups shipped in
+[`examples/bangkok_apartments.py`](examples/bangkok_apartments.py).
+
+The plumbing here is a rewrite — 12,000 lines down to ~3,600. The judgement
+isn't. What carried over is the part that took months to get right:
+
+- **An extraction prompt tuned on real posts**, not imagined ones. Mixed
+  English/Thai in the same sentence, Thai numerals (หมื่น/แสน/ล้าน), Sukhumvit
+  soi rules, BTS proximity, owner-vs-agent, and the mathematical-alphanumeric
+  Unicode (`𝟲𝟱,𝟬𝟬𝟬 𝗔𝘀𝗼𝗸𝗲`) that property spam uses to defeat keyword filters.
+- **A classifier that knows the difference** between someone offering a place
+  and someone looking for one — near-identical to a keyword filter, obviously
+  different to a model, and the single largest source of noise in these groups.
+- **Repost detection that holds up.** Agents repost the same unit daily under a
+  new URL; matching is on normalized text and on photo-set overlap that survives
+  Facebook re-signing its CDN URLs.
+- **Model selection settled by measurement.** DeepSeek was benchmarked against
+  GPT-5.2 and gpt-oss-120b on a hand-labelled English/Thai golden set. The same
+  harness ships here as `watcher label` / `watcher bench`, so you can re-run it
+  on your own data instead of taking anyone's word for it.
+- **[`TROUBLESHOOTING.md`](TROUBLESHOOTING.md) is a list of things that actually
+  broke** — duplicate alerts from two workers, a day of posts lost to an API
+  quota wall, an LLM inferring ownership from the group name. Not hypotheticals.
+
+If you're hunting in Bangkok, the preset is production-grade on day one. If
+you're hunting something else, you get all of the above as the starting point
+and your coding agent adapts it.
+
+---
+
 ## Doing it yourself
 
 Dependencies are managed with [uv](https://docs.astral.sh/uv/). If you don't

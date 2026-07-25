@@ -1,8 +1,10 @@
 """Example watch.py — Bangkok condos. 23 real groups, points scoring, Thai support.
 
 This is the set the template was extracted from: 23 Facebook groups scraped in
-production for a Bangkok apartment search. If you're looking in Bangkok you can
-use these as-is.
+production for a Bangkok apartment search, over 100,000 listings across several
+months. The prompt, classifier criteria, scoring weights and dedup thresholds
+below are all tuned on that data. If you're looking in Bangkok you can use this
+as-is — adjust the constants, don't rewrite the prompt.
 
     cp examples/bangkok_apartments.py watch.py
 
