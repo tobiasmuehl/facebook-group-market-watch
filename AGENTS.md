@@ -74,7 +74,9 @@ rejoin this file.
 Ask, in their words:
 
 1. **What are you looking for?** (an apartment, a specific car, tickets, a sofa)
-2. **Which Facebook groups?** URLs. They must already be a member of private ones.
+2. **Which Facebook groups?** URLs. With Apify they don't need to be members —
+   it scrapes with its own session. Membership only matters if they end up on
+   Chrome DevTools MCP or the Playwright fallback, which use their own login.
 3. **What makes one worth telling you about?** Price ceiling, size, condition,
    location, whatever — this becomes `matches()`.
 4. **How do you want to be told?** Telegram, or just a local web page.

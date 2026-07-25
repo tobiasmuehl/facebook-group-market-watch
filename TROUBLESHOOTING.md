@@ -191,7 +191,8 @@ sampling (`BROWSER_SCRAPING.md`). This is the most common first-run failure.
 
 **`watcher sample` wrote 0 posts**
 Read the per-group errors above it. Usually the actor rental above, or you
-aren't a member of the group. It exits non-zero and leaves any previous
+is genuinely closed to whatever session is scraping it — with Apify that's
+Apify's account, not yours. It exits non-zero and leaves any previous
 `data/sample.json` untouched.
 
 **`APIFY_API_TOKEN is not set`**

@@ -38,6 +38,10 @@ Two hard limits:
   tune around.
 - **Not a daemon.** It's tied to an active agent session, so it can't be your
   24/7 watcher. Use it to sample and calibrate; use Apify to run.
+- **You only see what your account sees.** Both browser options use *your*
+  login, so a group you haven't joined comes back empty. Apify doesn't have this
+  problem — it scrapes with its own session — so if a group works on Apify but
+  not here, joining it is the fix.
 
 `data/sample.json` is a JSON list of objects with these keys:
 

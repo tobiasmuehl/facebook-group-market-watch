@@ -176,8 +176,9 @@ agonise over thresholds up front.
 14 of the 23 are **owner-only groups** where agents are banned — fewer posts,
 better prices, no agent fee. Set `GROUPS = GROUPS_OWNER` for just those.
 
-You have to join the groups on Facebook first; no scraper can see a private
-group you're not in.
+You don't need to join these groups first — Apify scrapes with its own session,
+and these are public property groups. Membership only matters on the browser
+fallbacks, which use your own login.
 
 ---
 
@@ -285,7 +286,9 @@ to publish your source too.
 ## Notes
 
 - Data stays on your machine. SQLite at `data/watcher.db`, nothing phones home.
-- You need to be a member of a private group for any scraper to see it.
+- Apify scrapes with its own session, so you don't need to be a member of the
+  groups you watch. The browser fallbacks use *your* login, so there you do.
+  Genuinely closed groups may return nothing either way.
 - Scraping Facebook is against their terms of service. That risk is yours. Don't
   use your main account with the browser scraper.
 - Reposts are detected two ways — identical text, and overlapping photos —

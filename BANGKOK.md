@@ -132,9 +132,15 @@ filter. `CLASSIFY_CRITERIA` in the preset already covers these.
 
 Then ask: **renting or buying?** → `LOOKING_FOR = "rent"` or `"buy"`.
 
-**They must join the groups on Facebook first.** No scraper can see a private
-group you're not a member of. Say this out loud — it is the most common reason
-a first run returns nothing, and it is invisible from the error message.
+**Membership only matters if you're not using Apify.** Apify scrapes with its
+own logged-in session on its own infrastructure, so whether *the user* has
+joined these groups is irrelevant — and these 23 are public property groups
+anyway. Don't send them off to join 23 groups before they can start.
+
+It does matter for the fallbacks: Chrome DevTools MCP and the Playwright scraper
+drive the user's own browser and login, so they only see what that account can
+see. If you sampled with Chrome MCP and a group came back empty, that's the
+first thing to check.
 
 ### The buy/rent caveat
 
