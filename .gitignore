@@ -1,0 +1,11 @@
+.env
+data/*.db
+data/sample.json
+data/golden.json
+secrets/
+cookies/
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+reports/

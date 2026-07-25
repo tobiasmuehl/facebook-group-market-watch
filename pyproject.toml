@@ -1,0 +1,29 @@
+[project]
+name = "facebook-group-market-watch"
+version = "0.1.0"
+description = "Watch Facebook groups for the thing you're hunting. Configured by your coding agent."
+readme = "README.md"
+license = "AGPL-3.0-only"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+dependencies = [
+    "apify-client>=2.3.0",
+    "openai>=2.9.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.2.1",
+]
+
+[project.optional-dependencies]
+# Only needed for the browser fallback in scrapers/browser/. See BROWSER_SCRAPING.md.
+browser = ["playwright>=1.50.0"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.uv]
+# Managed with uv: `uv sync` to install, `uv run python watcher.py ...` to run.
+# This is an application, not a library — nothing here gets built or published.
+package = false
+
+# ponytail: no fastapi/jinja/uvicorn — `watcher web` uses stdlib http.server.
+# ponytail: no requests — Telegram uses stdlib urllib.
