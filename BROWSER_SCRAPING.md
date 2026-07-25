@@ -12,11 +12,15 @@ There are two non-Apify options and they are not equivalent.
 | Detection risk | very low — it is genuinely you | moderate to high |
 | Runs unattended | no | sort of |
 | Setup | none | login, session file, breakage |
-| Good for | sampling, calibration, occasional sweeps | a watcher you can't pay for |
+| Good for | a first look before you pay | a watcher you can't pay for |
+
+Neither replaces Apify. Apify is a two-minute setup that runs unattended on any
+machine; both options below need your own logged-in browser and your own
+attention. Use them to see this working before you commit, then switch.
 
 ---
 
-## Option 1 — Chrome DevTools MCP (recommended for sampling)
+## Option 1 — Chrome DevTools MCP (for a first look only)
 
 If your coding agent has the Chrome DevTools MCP server, it can drive your real
 Chrome, with your real Facebook login, from your own home IP. Nothing looks

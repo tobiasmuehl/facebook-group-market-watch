@@ -123,14 +123,15 @@ group you're not in.
 
 ### Scraping
 
-**Apify** is the default and what you should use.
-Get a token at <https://console.apify.com/account/integrations>.
+**Use Apify.** Token at <https://console.apify.com/account/integrations>, two
+minutes to set up, works the same on your laptop and on a server, and it's the
+only option that runs unattended — which is the whole point. It costs a little
+money. That's the right trade against an evening of fighting a browser.
 
-Can't or won't? [`BROWSER_SCRAPING.md`](BROWSER_SCRAPING.md) covers the two
-alternatives: driving your own Chrome through the Chrome DevTools MCP (great for
-sampling, can't run unattended) and a Playwright scraper in
-[`scrapers/browser/`](scrapers/browser/) (works, but not reliably — read the
-warnings).
+The alternatives in [`BROWSER_SCRAPING.md`](BROWSER_SCRAPING.md) are fallbacks,
+not equals: the Chrome DevTools MCP (fine for a first look, can't run
+unattended) and a Playwright scraper in [`scrapers/browser/`](scrapers/browser/)
+(works, but not reliably — read the warnings).
 
 ### LLM
 
@@ -170,6 +171,22 @@ uv run python watcher.py web    # http://localhost:8000
 | `watcher label` / `bench` | build a golden set, compare models on it |
 | `watcher doctor` | check your setup before blaming the code |
 | `watcher web` | browse what matched |
+
+---
+
+## Give it a few days
+
+It only sees posts made **since it started running**. There's no back-catalogue
+to import — each cycle fetches the newest posts and stops. The first run will
+look sparse. That's normal, not broken.
+
+Leave it running in the background for a few days and the database fills up as
+new listings appear. Don't judge your filters on day one: a quiet first evening
+means the groups were quiet. And when you do want to change your criteria,
+`watcher rematch` re-decides everything you've already collected for free.
+
+Uptime is the feature — in these groups the good listings go within hours, so a
+watcher that only runs while your laptop is awake misses most of the market.
 
 ---
 

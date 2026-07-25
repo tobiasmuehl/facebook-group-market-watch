@@ -131,24 +131,33 @@ against real posts from those groups. Go to Step 5.
 This is the step that makes the difference. Do not write `watch.py` from
 imagination — write it after reading what's actually in their groups.
 
-**If you have the Chrome DevTools MCP server, use it.** It drives their real
-Chrome with their real Facebook login. No Apify token needed, so they can see
-this working before paying for anything. Open each group, read ~25 recent posts,
-and write `data/sample.json`:
+**Use Apify. This is the default and you should steer them to it.** Have them
+get a token (<https://console.apify.com/account/integrations>), put `GROUPS` in
+`watch.py`, and run:
+
+```bash
+uv run python watcher.py sample
+```
+
+It's a two-minute setup, it works the same on their laptop and on a server, and
+it's the only option that can run unattended afterwards — which is the entire
+point of this tool. It costs a little money. Say so plainly and move on; don't
+talk them into a free option that costs them an evening.
+
+**Chrome DevTools MCP is the fallback, not the first choice.** Only reach for it
+when they don't want to create an Apify account yet, or they want to see this
+working before paying for anything. It drives their real Chrome with their real
+Facebook login, so you open each group, read ~25 recent posts, and write
+`data/sample.json` yourself:
 
 ```json
 [{"post_url": "...", "group_id": "...", "raw_text": "...", "image_urls": [], "posted_at": null}]
 ```
 
-Local laptop only — from a VPS this gets checkpointed immediately.
-
-**Otherwise**, have them get an Apify token
-(<https://console.apify.com/account/integrations>), put `GROUPS` in `watch.py`,
-and run:
-
-```bash
-uv run python watcher.py sample
-```
+Its limits are real: local laptop only (a VPS gets checkpointed immediately),
+it's slower because you're driving a browser by hand, and **it cannot run
+unattended** — so they'd still need Apify for Step 6. If you use it for
+sampling, tell them that up front.
 
 Either way: **read `data/sample.json` properly before continuing.** You are
 looking for what language posts are in, how prices are written, what the spam
@@ -233,6 +242,30 @@ uv run python watcher.py run            # continuous
 
 Tell them how to keep it running (tmux, launchd, systemd, or `--once` on a
 cron — see README) and how to browse results (`watcher web`).
+
+### Set the expectation before you hand off
+
+**Say this explicitly. It is the difference between someone keeping this running
+and deleting it on day one.**
+
+> This only sees posts made **since it started running**. There's no back-catalogue
+> to pull in — each cycle fetches the newest posts and stops. So the first run
+> will look sparse, and that's normal, not broken.
+>
+> Leave it running in the background for **a few days**. The database fills up as
+> new listings appear, and it gets genuinely useful once there's a few days of
+> history in it. The first day is the worst day this will ever be.
+
+Two consequences worth spelling out for them:
+
+- **Don't judge the filters on day one.** A quiet first evening means the groups
+  were quiet, not that `matches()` is wrong. Wait for a real sample before
+  tightening or loosening anything — and when they do want changes,
+  `watcher rematch` re-decides the whole accumulated history for free.
+- **Uptime is the feature.** A watcher that runs 2 hours a day misses 90% of the
+  market, and in these groups the good listings go within hours. If they're on a
+  laptop that sleeps, say so now and help them pick launchd/systemd or a cheap
+  VPS rather than leaving a terminal open.
 
 Tell them the two commands they'll actually use later:
 

@@ -185,6 +185,21 @@ here. If the user asks why some posts have no details, this is why.
 
 ---
 
+## Set the expectation before handing off
+
+Bangkok groups are busy, but the watcher still only sees posts made **since it
+started running** — there's no back-catalogue. Tell them to leave it running for
+a few days before judging it. With the schedule above, a full day covers the
+09:00–18:00 window where most listings land, so by day three they'll have a real
+sample to tune against.
+
+This matters more here than elsewhere: good Bangkok listings, especially in the
+owner groups, are gone within hours. A watcher that only runs while their laptop
+is awake misses most of the market. Help them set up launchd/systemd or a cheap
+VPS at handoff rather than leaving a terminal open.
+
+---
+
 ## Then continue
 
 Go to **Step 5 (Calibrate)** in `AGENTS.md`. Do not skip it — the preset gives

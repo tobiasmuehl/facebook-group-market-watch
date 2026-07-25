@@ -10,6 +10,18 @@ extracted from, not hypotheticals.
 
 ## Nothing is happening
 
+**You just set it up and there's almost nothing there.**
+Expected. This only sees posts made *since it started running* — there is no
+back-catalogue to import. Leave it running for a few days and it fills up. Don't
+retune your filters on day-one data: a quiet first evening usually means the
+groups were quiet. When you do change criteria, `watcher rematch` re-decides
+everything already collected for free.
+
+**It was finding things, then went quiet for hours.**
+Check the process is still alive and that the machine didn't sleep. A laptop
+that suspends overnight misses the whole overnight market, and in these groups
+good listings go within hours. See "Keeping it running" in the README.
+
 **No alerts at all, and `watcher run` says `processed=0`.**
 No posts reached the queue. Run `watcher run --once` and look at the scraping
 lines — if every group says `cooldown`, that's working as designed. Wait, or
