@@ -6,6 +6,8 @@ use these as-is.
 
     cp examples/bangkok_apartments.py watch.py
 
+Setup notes, cost math, and the decisions this preset forces: ../BANGKOK.md
+
 ──────────────────────────────────────────────────────────────────────────────
 READ THIS BEFORE YOU TURN IT ON
 

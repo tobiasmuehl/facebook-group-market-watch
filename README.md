@@ -86,7 +86,9 @@ See [`examples/`](examples/) for cars, tickets, and furniture.
 ### Looking in Bangkok?
 
 There's a ready-made config with **23 real Facebook property groups** — the set
-this template was extracted from, after running in production for months:
+this template was extracted from, after running in production for months.
+Full notes in [`BANGKOK.md`](BANGKOK.md); your coding agent reads it automatically
+if you say you're looking in Bangkok.
 
 ```bash
 cp examples/bangkok_apartments.py watch.py

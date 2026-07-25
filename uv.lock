@@ -89,7 +89,7 @@ wheels = [
 ]
 
 [[package]]
-name = "fb-group-market-watch"
+name = "facebook-group-market-watch"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

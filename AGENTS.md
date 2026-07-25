@@ -40,13 +40,36 @@ broke and why.
 
 - Apify for scraping
 - `deepseek/deepseek-v4-flash` for extraction
-- Stage 1 classifier **off**
+- Stage 1 classifier **off** (on for Bangkok or any high-volume watch)
 - Keyword prefilter derived by you from the sampled posts
 - Telegram if they want alerts on their phone, otherwise `watcher web` only
 
+Tier A does **not** mean skipping Step 1 — the Bangkok question changes which
+backend you're allowed to pick, so ask it regardless of tier.
+
 ---
 
-## Step 1 — What are they hunting?
+## Step 1 — Is this about Bangkok property?
+
+Ask this second, before anything else about what they're hunting:
+
+> Are you looking for a place in **Bangkok** — to rent or to buy?
+
+**If yes → open [`BANGKOK.md`](BANGKOK.md) and follow it now.** It's a complete
+preset: 23 real groups that ran in production, a points-scoring system,
+Thai/English extraction, and a cost-aware Bangkok-time schedule.
+
+It also **pre-decides several answers below, and overrides them.** Most
+importantly it forces `LLM_BACKEND=openrouter` — these groups produce thousands
+of posts a day, which would shred a Claude Code or Codex subscription within
+hours. So read `BANGKOK.md` *before* Step 2, not after. It tells you where to
+rejoin this file.
+
+**If no** → carry on with Step 1b below. Nothing in `BANGKOK.md` applies.
+
+---
+
+## Step 1b — What are they hunting?
 
 Ask, in their words:
 
@@ -59,86 +82,30 @@ Ask, in their words:
 Don't over-interview. You'll learn more from the actual posts in step 3 than
 from any amount of asking.
 
-### Offer the Bangkok preset
+**Volume check — ask this now, it changes Step 2.** Roughly how busy are these
+groups? If the answer is more than a few hundred posts a day, treat it like
+Bangkok: OpenRouter only, and turn the classifier on.
 
-If they mention **Bangkok**, or an apartment/condo anywhere in Thailand, offer
-this before asking for group URLs:
+### If they said Bangkok
 
-> I have a ready-made set of 23 Bangkok property groups that were used in
-> production for exactly this. Want to start from those?
->
-> - **Everything** — 23 groups, highest volume
-> - **Owner-only** — 14 groups where agents are banned, so you deal with the
->   owner directly. Fewer posts, better prices, no agent fee. *(good default)*
-> - **General only** — 9 high-volume agent groups
->
-> And are you **renting** or **buying**?
-
-Then:
-
-```bash
-cp examples/bangkok_apartments.py watch.py
-```
-
-Set `LOOKING_FOR` to `"rent"` or `"buy"`, `GROUPS` to `GROUPS_OWNER`,
-`GROUPS_GENERAL`, or the full default, and adjust `MAX_RENT_THB` /
-`MAX_BUY_THB`, `MIN_SIZE_SQM`, and the soi/area sets to what they told you.
-
-**Tell them these four things. They are not optional.**
-
-1. **These groups produce thousands of posts a day.** That's the whole reason
-   the preset is configured the way it is.
-
-2. **Use DeepSeek.** Set `LLM_MODEL=deepseek/deepseek-v4-flash`. At this volume
-   a frontier model costs real money for no benefit — extraction is a
-   formatting task. If they doubt it, `watcher label && watcher bench` settles
-   it with numbers instead of opinion.
-
-3. **Turn the classifier on** — `CLASSIFIER_ENABLED=true`. This is the one
-   preset where it's clearly worth it. Above ~500 posts/day the cheap yes/no
-   gate pays for itself, and these groups are thick with posts that look right
-   to a keyword filter and aren't.
-
-4. **Start broad, refine later.** Set a generous budget and a wide area list on
-   day one. A day of real alerts teaches more than an hour of guessing
-   thresholds. When they want it tighter they just tell you — *"too many
-   studios"*, *"only Thonglor now"*, *"bonus for high floors"* — you edit
-   `watch.py`, then run `watcher rematch`, which re-decides their whole history
-   for free. Say this out loud: **tightening criteria costs nothing**, so
-   there's no reason to over-think them up front.
-
-The preset already includes a Bangkok-time scrape schedule
-(`scrape_interval_minutes()`): every 15 min during office hours, backing off to
-150 min overnight. Apify bills per run, and nobody posts at 4am.
-
-Honest caveat to pass on: Bangkok groups mostly don't separate sale from
-rental — the two biggest are named "condo for sale **and** rent" — so the real
-filtering happens on the extracted `is_rental` field, not by picking groups.
-
-They still need to **join those groups on Facebook** before anything can scrape
-them. Say so explicitly; it's the most common reason a first run returns nothing.
-
-You can skip the step 3–4 sampling and prompt work with this preset — the prompt
-is already written for Thai/English mixed posts, Thai numerals (หมื่น/แสน/ล้าน),
-Sukhumvit soi rules, and BTS proximity. **Do not skip step 5.**
-
-### The scoring system
-
-This preset scores rather than just filters: hard requirements reject outright,
-then surviving listings earn points for location, quality of life, amenities,
-size, and dealing with an owner directly. `ALERT_THRESHOLD` starts at 0 — alert
-on everything that qualifies — and they raise it once they've seen a few days of
-real output.
-
-When they want different priorities, edit the weights in `score()`, not the
-plumbing. The soi and area sets at the top of the file are **example values** —
-replace them with the sois the user actually cares about.
+You should already be in [`BANGKOK.md`](BANGKOK.md) — go back to Step 1. Every
+Bangkok-specific decision lives there: the 23-group package, rent vs buy, the
+forced OpenRouter backend, the classifier, the scrape schedule, the scoring
+system, and the Thai-language handling that is already written for you.
 
 ---
 
 ## Step 2 — Pick ONE LLM backend
 
-Ask one question:
+**Skip this if they said Bangkok** — `BANGKOK.md` already forced
+`LLM_BACKEND=openrouter`. Don't reopen it.
+
+**Skip the CLI options for any high-volume watch** (more than a few hundred
+posts a day, from the volume check in Step 1b). Go straight to OpenRouter and
+say why: a subscription-backed CLI runs one subprocess per post and will hit its
+usage limits, stalling the watcher and burning the allowance they want for work.
+
+Otherwise, ask one question:
 
 > Do you already have Claude Code or Codex logged in on this machine?
 
@@ -157,6 +124,9 @@ Write `.env` from `.env.example`.
 ---
 
 ## Step 3 — Get real posts BEFORE writing anything
+
+**Skip this if they said Bangkok** — the preset's prompt is already written
+against real posts from those groups. Go to Step 5.
 
 This is the step that makes the difference. Do not write `watch.py` from
 imagination — write it after reading what's actually in their groups.
@@ -188,6 +158,9 @@ beats a prompt written from a description every single time.
 ---
 
 ## Step 4 — Write `watch.py`
+
+**Skip this if they said Bangkok** — copy the preset per `BANGKOK.md` and edit
+its constants instead. Go to Step 5.
 
 Six things, all in that one file:
 
